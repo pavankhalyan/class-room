@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
-const ClassroomTimeTable = () => {
+function ClassroomTimetable() {
+  const [timetable, setTimetable] = useState([]);
+
+  useEffect(() => {
+    // Fetch timetable data from backend
+    // Example: setTimetable(response.data);
+  }, []);
+
   return (
-    <div>ClassroomTimeTable</div>
-  )
+    <div>
+      <h2>Classroom Timetable</h2>
+      <ul>
+        {timetable.map((entry, index) => (
+          <li key={index}>{entry.subject} - {entry.time}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default ClassroomTimeTable
+export default ClassroomTimetable;

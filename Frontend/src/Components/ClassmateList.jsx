@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import Table from './Table';
 
-const ClassmateList = () => {
+function ClassmateList() {
+  const [classmates, setClassmates] = useState([]);
+
+  useEffect(() => {
+    // Fetch classmates data from backend
+    // Example: setClassmates(response.data);
+  }, []);
+
   return (
-    <div>ClassmateList</div>
-  )
+    <div>
+      <h2>Classmate List</h2>
+      <Table data={classmates} />
+    </div>
+  );
 }
 
-export default ClassmateList
+export default ClassmateList;

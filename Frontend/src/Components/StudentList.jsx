@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import Table from './Table';
 
-const StudentList = () => {
+function StudentList() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    // Fetch student data from backend
+    // Example: setStudents(response.data);
+  }, []);
+
   return (
-    <div>StudentList</div>
-  )
+    <div>
+      <h2>Student List</h2>
+      <Table data={students} />
+    </div>
+  );
 }
 
-export default StudentList
+export default StudentList;
