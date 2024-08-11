@@ -1,18 +1,29 @@
-// controllers/authController.js
+const { UserModel } = require('../models/userModel');  // Import the UserModel
 
-const users = require('../models/userModel');
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    
+    // Find the user by email using Mongoose
+    const user = await UserModel.findOne({ email });
 
-const login = (req, res) => {
-  const { email, password } = req.body;
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
+    // Compare the provided password with the stored password
+    // Assuming passwords are not hashed, directly compare them
+    // If passwords are hashed, you should use bcrypt to compare them
+    if (password !== user.password) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-  if (user) {
+    // Return the user's role if authentication is successful
     res.json({ role: user.role });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Server error during login', error });
   }
 };
 

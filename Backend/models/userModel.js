@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Hardcoded users for initial testing
-const users = [
+const users = [ 
   { email: 'principal@classroom.com', password: 'Admin', role: 'principal' },
   // Add more users for teachers and students as needed
 ];
