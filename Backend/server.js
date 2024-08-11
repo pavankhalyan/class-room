@@ -1,6 +1,10 @@
+// server.js
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -9,26 +13,8 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
-// Hardcoded user credentials
-const users = [
-  { email: 'principal@classroom.com', password: 'Admin', role: 'principal' },
-  // You can add more users here for teachers and students if needed
-];
-
-// Login route
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
-
-  if (user) {
-    res.json({ role: user.role });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
-});
+// Routes
+app.use('/api', authRoutes);
 
 // Start the server
 app.listen(PORT, () => {
