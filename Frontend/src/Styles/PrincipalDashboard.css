@@ -1,40 +1,53 @@
+.dashboard-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 350px;
+  background-color: #343a40;
+  padding: 20px;
+  color: #fff;
+  flex-shrink: 0;
+  height: 45pc; /* Ensure the sidebar doesn’t shrink */
+}
+
+.sidebar h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.sidebar .MuiListItem-root {
+  color: #fff;
+}
+
+.sidebar .MuiListItem-root:hover {
+  background-color: #495057;
+}
+
 .dashboard {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 40px auto;
-    text-align: center;
-  }
-  
-  .dashboard h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .dashboard p {
-    margin-bottom: 30px;
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .dashboard-links {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .dashboard-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .dashboard-button:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-grow: 1; /* Use remaining space */
+  text-align: center;
+  position: relative;
+  margin: 20px; /* Adjusted from '20px auto' */ 
+  width: 70pc;
+}
+
+.dashboard h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.dashboard p {
+  margin-bottom: 30px;
+  font-size: 16px;
+  color: #555;
+}
+
+.dashboard-content {
+  margin-top: 20px;
+}
