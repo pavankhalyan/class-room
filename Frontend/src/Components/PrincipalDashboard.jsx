@@ -6,17 +6,30 @@ import axios from 'axios'; // Import axios for making HTTP requests
 
 const PrincipalDashboard = () => {
   const [selectedOption, setSelectedOption] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
+  const [teacherEmail, setTeacherEmail] = useState('');
+  const [teacherPassword, setTeacherPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async () => {
+  const handleStudentSubmit = async () => {
     try {
-      const response = await axios.post('/api/create-student', { email, password });
+      const response = await axios.post('/api/create-student', { email: studentEmail, password: studentPassword });
       setMessage(response.data.message);
-      setEmail('');
-      setPassword('');
+      setStudentEmail('');
+      setStudentPassword('');
+    } catch (error) {
+      setError(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
+  const handleTeacherSubmit = async () => {
+    try {
+      const response = await axios.post('/api/create-teacher', { email: teacherEmail, password: teacherPassword });
+      setMessage(response.data.message);
+      setTeacherEmail('');
+      setTeacherPassword('');
     } catch (error) {
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
@@ -33,18 +46,18 @@ const PrincipalDashboard = () => {
               type="email"
               fullWidth
               margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={studentEmail}
+              onChange={(e) => setStudentEmail(e.target.value)}
             />
             <TextField
               label="Password"
               type="password"
               fullWidth
               margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={studentPassword}
+              onChange={(e) => setStudentPassword(e.target.value)}
             />
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
+            <Button variant="contained" color="primary" onClick={handleStudentSubmit}>
               Create Account
             </Button>
             {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
@@ -52,7 +65,32 @@ const PrincipalDashboard = () => {
           </div>
         );
       case 'create-teacher-account':
-        return <div>Create Teacher Account Form</div>;
+        return (
+          <div>
+            <Typography variant="h6">Create Teacher Account</Typography>
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              margin="normal"
+              value={teacherEmail}
+              onChange={(e) => setTeacherEmail(e.target.value)}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={teacherPassword}
+              onChange={(e) => setTeacherPassword(e.target.value)}
+            />
+            <Button variant="contained" color="primary" onClick={handleTeacherSubmit}>
+              Create Account
+            </Button>
+            {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
+            {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
+          </div>
+        );
       case 'manage-accounts':
         return <div>Manage Accounts Content</div>;
       case 'create-classroom':
