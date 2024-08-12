@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const users = require('../models/userModel').users; // Import the hardcoded users
 
 // Create a new user (teacher or student)
 exports.createUser = async (req, res) => {
@@ -27,6 +27,15 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // First, check if the email and password match any of the hardcoded users
+    const hardcodedUser = users.find(user => user.email === email && user.password === password);
+
+    if (hardcodedUser) {
+      // Return the role if the hardcoded user is authenticated
+      return res.status(200).json({ role: hardcodedUser.role });
+    }
+
+    // If no hardcoded user is found, proceed to check the database
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -39,12 +48,10 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(200).json({ token, role: user.role });
+    // Return the user's role if authentication is successful
+    res.status(200).json({ role: user.role });
   } catch (err) {
+    console.error('Error during login:', err);
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
 };
