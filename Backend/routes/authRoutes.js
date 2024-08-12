@@ -1,11 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { login , createUser } = require('../controllers/userController');
+const { login, createUser, createStudent } = require('../controllers/userController');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
-// Login route for user authentication
+// Public routes
 router.post('/login', login);
-
-// Signup route for user registration
 router.post('/signup', createUser);
+
+// Protected route (requires authentication)
+try{
+router.post('/create-student',  createStudent);
+}catch(err){
+    res.status(400)
+    console.log(err)
+}
+
 
 module.exports = router;

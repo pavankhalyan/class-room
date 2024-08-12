@@ -1,6 +1,27 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const users = require('../models/userModel').users; // Import the hardcoded users
+const Student = require('../models/studentModel');
+
+exports.createStudent = async (req, res) => {
+  const { email, password } = req.body;
+
+  try { 
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const newStudent = new Student({
+      email,
+      password: hashedPassword,
+      // classroom: classroomId,
+    });
+
+    await newStudent.save();
+    res.status(201).json({ message: 'Student account created successfully', student: newStudent });
+  } catch (err) {
+    res.status(500).json({ message: 'Error creating student', error: err.message });
+  }
+}; 
+
 
 // Create a new user (teacher or student)
 exports.createUser = async (req, res) => {
@@ -35,7 +56,6 @@ exports.login = async (req, res) => {
       return res.status(200).json({ role: hardcodedUser.role });
     }
 
-    // If no hardcoded user is found, proceed to check the database
     const user = await User.findOne({ email });
 
     if (!user) {
