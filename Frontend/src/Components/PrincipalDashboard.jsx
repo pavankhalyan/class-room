@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, Alert } from '@mui/material';
+import { useState } from 'react';
+import { List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, Alert, FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaChalkboard, FaUserTie, FaUserFriends } from 'react-icons/fa';
 import '../Styles/PrincipalDashboard.css';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
 
 const PrincipalDashboard = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -10,6 +10,12 @@ const PrincipalDashboard = () => {
   const [studentPassword, setStudentPassword] = useState('');
   const [teacherEmail, setTeacherEmail] = useState('');
   const [teacherPassword, setTeacherPassword] = useState('');
+  const [classroomName, setClassroomName] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [days, setDays] = useState([]);
+  const [numStudents, setNumStudents] = useState(''); // New state for number of students
+  const [maxCapacity, setMaxCapacity] = useState(''); // New state for maximum capacity
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -30,6 +36,28 @@ const PrincipalDashboard = () => {
       setMessage(response.data.message);
       setTeacherEmail('');
       setTeacherPassword('');
+    } catch (error) {
+      setError(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
+  const handleClassroomSubmit = async () => {
+    try {
+      const response = await axios.post('/api/create-classroom', {
+        name: classroomName,
+        startTime,
+        endTime,
+        days,
+        numStudents,       // Include number of students
+        maxCapacity        // Include maximum capacity
+      });
+      setMessage(response.data.message);
+      setClassroomName('');
+      setStartTime('');
+      setEndTime('');
+      setDays([]);
+      setNumStudents(''); // Reset state
+      setMaxCapacity(''); // Reset state
     } catch (error) {
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
@@ -91,10 +119,79 @@ const PrincipalDashboard = () => {
             {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
           </div>
         );
+      case 'create-classroom':
+        return (
+          <div className="scrollable-form">
+            <Typography variant="h6">Create Classroom</Typography>
+            <TextField
+              label="Classroom Name"
+              fullWidth
+              margin="normal"
+              value={classroomName}
+              onChange={(e) => setClassroomName(e.target.value)}
+            />
+            <TextField
+              label="Start Time"
+              type="time"
+              fullWidth
+              margin="normal"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+            <TextField
+              label="End Time"
+              type="time"
+              fullWidth
+              margin="normal"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+            <TextField
+              label="Number of Students"
+              type="number"
+              fullWidth
+              margin="normal"
+              value={numStudents}
+              onChange={(e) => setNumStudents(e.target.value)}
+            />
+            <TextField
+              label="Maximum Capacity"
+              type="number"
+              fullWidth
+              margin="normal"
+              value={maxCapacity}
+              onChange={(e) => setMaxCapacity(e.target.value)}
+            />
+            <FormControl component="fieldset" style={{ marginTop: 10 }}>
+              <Typography variant="subtitle1">Days of the Week</Typography>
+              <FormGroup>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                  <FormControlLabel
+                    key={day}
+                    control={
+                      <Checkbox
+                        checked={days.includes(day)}
+                        onChange={(e) => {
+                          setDays(prevDays =>
+                            e.target.checked ? [...prevDays, day] : prevDays.filter(d => d !== day)
+                          );
+                        }}
+                      />
+                    }
+                    label={day}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            <Button variant="contained" color="primary" className="submit-button" onClick={handleClassroomSubmit}>
+              Create Classroom
+            </Button>
+            {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
+            {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
+          </div>
+        );
       case 'manage-accounts':
         return <div>Manage Accounts Content</div>;
-      case 'create-classroom':
-        return <div>Create Classroom Form</div>;
       case 'assign-teachers':
         return <div>Assign Teachers to Classrooms Form</div>;
       case 'assign-students':
