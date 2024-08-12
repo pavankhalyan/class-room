@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, Alert, FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaChalkboard, FaUserTie, FaUserFriends } from 'react-icons/fa';
 import '../Styles/PrincipalDashboard.css';
@@ -14,8 +14,8 @@ const PrincipalDashboard = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
-  const [numStudents, setNumStudents] = useState(''); // Number of students
-  const [maxCapacity, setMaxCapacity] = useState(''); // Maximum capacity
+  const [numStudents, setNumStudents] = useState(''); 
+  const [maxCapacity, setMaxCapacity] = useState(''); 
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -30,14 +30,13 @@ const PrincipalDashboard = () => {
       setStudentEmail('');
       setStudentPassword('');
     } catch (error) {
-      // Handle error response
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
   };
   
   const handleTeacherSubmit = async () => {
     try {
-      const response = await axios.post('/api/create-teacher', { email: teacherEmail, password: teacherPassword });
+      const response = await axios.post('http://localhost:5000/api/auth/create-teacher', { email: teacherEmail, password: teacherPassword });
       setMessage(response.data.message);
       setTeacherEmail('');
       setTeacherPassword('');
@@ -48,21 +47,21 @@ const PrincipalDashboard = () => {
 
   const handleClassroomSubmit = async () => {
     try {
-      const response = await axios.post('/api/create-classroom', {
+      const response = await axios.post('http://localhost:5000/api/classroom/create-classroom', {
         name: classroomName,
         startTime,
         endTime,
         days,
-        numStudents,       // Include number of students
-        maxCapacity        // Include maximum capacity
+        numStudents,       
+        maxCapacity       
       });
       setMessage(response.data.message);
       setClassroomName('');
       setStartTime('');
       setEndTime('');
       setDays([]);
-      setNumStudents(''); // Reset state
-      setMaxCapacity(''); // Reset state
+      setNumStudents(''); 
+      setMaxCapacity(''); 
     } catch (error) {
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
