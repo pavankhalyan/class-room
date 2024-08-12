@@ -18,10 +18,10 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Routes>
+        <Route path="/" element={<Login />} />
         {/* <Header />
         <Sidebar /> */}
-        <Routes>
-          <Route path="/" element={<Login />} />
           <Route path="/principal" element={<PrincipalDashboard />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
           <Route path="/student" element={<StudentDashboard />} />
