@@ -1,5 +1,6 @@
 .dashboard-container {
   display: flex;
+  height: 100vh; /* Ensure full viewport height */
 }
 
 .sidebar {
@@ -8,7 +9,7 @@
   padding: 20px;
   color: #fff;
   flex-shrink: 0;
-  height: 45pc; /* Ensure the sidebar doesn’t shrink */
+  height: 100%; /* Ensure the sidebar stretches the full height */
 }
 
 .sidebar h3 {
@@ -31,9 +32,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex-grow: 1; /* Use remaining space */
   text-align: center;
-  position: relative;
-  margin: 20px; /* Adjusted from '20px auto' */ 
-  width: 70pc;
+  margin: 20px; /* Adjusted from '20px auto' to maintain spacing */
+  max-width: calc(100% - 370px); /* Adjust width to fit within container */
+  width: 100%; /* Ensure the dashboard width is responsive */
 }
 
 .dashboard h2 {
