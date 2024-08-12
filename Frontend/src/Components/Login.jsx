@@ -9,7 +9,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
+    try { 
+      
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
       const { role } = response.data;
 

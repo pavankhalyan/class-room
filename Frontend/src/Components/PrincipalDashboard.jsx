@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, Alert, FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaChalkboard, FaUserTie, FaUserFriends } from 'react-icons/fa';
 import '../Styles/PrincipalDashboard.css';
@@ -14,22 +14,27 @@ const PrincipalDashboard = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
-  const [numStudents, setNumStudents] = useState(''); // New state for number of students
-  const [maxCapacity, setMaxCapacity] = useState(''); // New state for maximum capacity
+  const [numStudents, setNumStudents] = useState(''); // Number of students
+  const [maxCapacity, setMaxCapacity] = useState(''); // Maximum capacity
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleStudentSubmit = async () => {
+  
     try {
-      const response = await axios.post('/api/create-student', { email: studentEmail, password: studentPassword });
+      const response = await axios.post('http://localhost:5000/api/auth/create-student', 
+        { email: studentEmail, password: studentPassword }, 
+      );
+  
       setMessage(response.data.message);
       setStudentEmail('');
       setStudentPassword('');
     } catch (error) {
+      // Handle error response
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
   };
-
+  
   const handleTeacherSubmit = async () => {
     try {
       const response = await axios.post('/api/create-teacher', { email: teacherEmail, password: teacherPassword });
@@ -239,21 +244,17 @@ const PrincipalDashboard = () => {
           <ListItem button onClick={() => setSelectedOption('assign-students')}>
             <ListItemIcon>
               <FaUserFriends />
-            </ListItemIcon>
+                       </ListItemIcon>
             <ListItemText primary="Assign Students to Teachers" />
           </ListItem>
         </List>
       </aside>
-      
-      <div className="dashboard">
-        <h2>Principal Dashboard</h2>
-        <p>Welcome to the principal dashboard. Here you can manage teachers, students, and classrooms.</p>
-        <div className="dashboard-content">
-          {renderContent()} {/* Render the selected content */}
-        </div>
-      </div>
+      <main className="main-content">
+        {renderContent()}
+      </main>
     </div>
   );
-}
+};
 
 export default PrincipalDashboard;
+
