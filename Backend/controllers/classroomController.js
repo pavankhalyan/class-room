@@ -1,23 +1,18 @@
 const Classroom = require('../models/classroomModel');
 const User = require('../models/userModel');
 
-// Create a new classroom
+
 exports.createClassroom = async (req, res) => {
-  const { name, startTime, endTime, days, teacherId } = req.body;
+  const { name, startTime, endTime, days, numStudents, maxCapacity } = req.body;
 
   try {
-    const teacher = await User.findById(teacherId);
-
-    if (!teacher || teacher.role !== 'teacher') {
-      return res.status(400).json({ message: 'Invalid teacher ID' });
-    }
-
     const newClassroom = new Classroom({
       name,
       startTime,
       endTime,
       days,
-      teacher: teacher._id,
+      numStudents,
+      maxCapacity,
     });
 
     await newClassroom.save();
@@ -26,6 +21,7 @@ exports.createClassroom = async (req, res) => {
     res.status(500).json({ message: 'Error creating classroom', error: err.message });
   }
 };
+
 
 // Assign students to a classroom
 exports.assignStudents = async (req, res) => {

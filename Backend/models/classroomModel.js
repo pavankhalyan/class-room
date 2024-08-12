@@ -1,12 +1,32 @@
 const mongoose = require('mongoose');
 
-const classroomSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
-  days: [{ type: String, required: true }], // E.g., ['Monday', 'Tuesday', ...]
-  teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+const ClassroomSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  startTime: {
+    type: String,
+    required: true,
+  },
+  endTime: {
+    type: String,
+    required: true,
+  },
+  days: {
+    type: [String],
+    required: true,
+  },
+  numStudents: {
+    type: Number,
+    required: true,
+  },
+  maxCapacity: {
+    type: Number,
+    required: true,
+  }
 });
 
-module.exports = mongoose.model('Classroom', classroomSchema);
+const Classroom = mongoose.model('Classroom', ClassroomSchema);
+
+module.exports = Classroom;

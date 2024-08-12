@@ -1,7 +1,8 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const users = require('../models/userModel').users; // Import the hardcoded users
-const Student = require('../models/studentModel');
+const Student = require('../models/studentModel');  
+const Teacher = require('../models/teacherModel');
 
 exports.createStudent = async (req, res) => {
   const { email, password } = req.body;
@@ -12,7 +13,6 @@ exports.createStudent = async (req, res) => {
     const newStudent = new Student({
       email,
       password: hashedPassword,
-      // classroom: classroomId,
     });
 
     await newStudent.save();
@@ -20,10 +20,27 @@ exports.createStudent = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Error creating student', error: err.message });
   }
-}; 
+};  
+
+exports.createTeacher = async (req, res) => {
+  const { email, password } = req.body; 
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10); 
+
+    const newTeacher = new Teacher({
+      email,
+      password: hashedPassword,
+    }); 
+
+    await newTeacher.save();
+    res.status(201).json({ message: 'Teacher account created successfully', teacher: newTeacher }); 
+    } catch (err) {
+    res.status(500).json({ message: 'Error creating teacher', error: err.message });
+  }
+} 
 
 
-// Create a new user (teacher or student)
 exports.createUser = async (req, res) => {
   const { email, password, role } = req.body;
 
@@ -48,11 +65,9 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // First, check if the email and password match any of the hardcoded users
     const hardcodedUser = users.find(user => user.email === email && user.password === password);
 
     if (hardcodedUser) {
-      // Return the role if the hardcoded user is authenticated
       return res.status(200).json({ role: hardcodedUser.role });
     }
 
@@ -67,8 +82,7 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
-    // Return the user's role if authentication is successful
+    
     res.status(200).json({ role: user.role });
   } catch (err) {
     console.error('Error during login:', err);
