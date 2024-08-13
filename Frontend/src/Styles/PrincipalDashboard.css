@@ -43,7 +43,7 @@
   }
 
   .scrollable-form {
-    max-height: 400px; 
+    max-height: 710px; 
     overflow-y: auto;
     padding: 10px;
     border: 1px solid #ddd;
@@ -63,6 +63,7 @@
     cursor: pointer;
     text-align: center; 
   }
+  
   
   .submit-button:hover {
     background-color: #0056b3; 

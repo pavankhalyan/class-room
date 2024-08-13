@@ -123,8 +123,8 @@ const PrincipalDashboard = () => {
         );
       case 'create-teacher-account':
         return (
-          <div className="form-container">
-            <Typography variant="h6">Create Teacher Account</Typography>
+          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-80">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Teacher Account</Typography>
             <TextField
               label="Email"
               type="email"
@@ -148,8 +148,8 @@ const PrincipalDashboard = () => {
         );
       case 'create-classroom':
         return (
-          <div className="form-container scrollable-form">
-            <Typography variant="h6">Create Classroom</Typography>
+          <div className="scrollable-form">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Classroom</Typography>
             <TextField
               label="Classroom Name"
               fullWidth
@@ -171,7 +171,7 @@ const PrincipalDashboard = () => {
               fullWidth
               margin="normal"
               value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
+              onChange={(e) => setEndTime(e.target.value)} 
             />
             <TextField
               label="Number of Students"
