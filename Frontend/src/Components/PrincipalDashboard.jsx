@@ -1,8 +1,28 @@
 import { useState } from 'react';
-import { List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, Alert, FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
-import { FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaChalkboard, FaUserTie, FaUserFriends } from 'react-icons/fa';
-import '../Styles/PrincipalDashboard.css';
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
+} from '@mui/material';
+import {
+  FaUserGraduate,
+  FaChalkboardTeacher,
+  FaUsersCog,
+  FaChalkboard,
+  FaUserTie,
+  FaUserFriends
+} from 'react-icons/fa';
 import axios from 'axios';
+import '../Styles/PrincipalDashboard.css';
 
 const PrincipalDashboard = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -14,18 +34,18 @@ const PrincipalDashboard = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
-  const [numStudents, setNumStudents] = useState(''); 
-  const [maxCapacity, setMaxCapacity] = useState(''); 
+  const [numStudents, setNumStudents] = useState('');
+  const [maxCapacity, setMaxCapacity] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleStudentSubmit = async () => {
-  
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/create-student', 
-        { email: studentEmail, password: studentPassword }, 
-      );
-  
+      const response = await axios.post('http://localhost:5000/api/auth/create-student', {
+        email: studentEmail,
+        password: studentPassword
+      });
+
       setMessage(response.data.message);
       setStudentEmail('');
       setStudentPassword('');
@@ -33,10 +53,14 @@ const PrincipalDashboard = () => {
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
   };
-  
+
   const handleTeacherSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/create-teacher', { email: teacherEmail, password: teacherPassword });
+      const response = await axios.post('http://localhost:5000/api/auth/create-teacher', {
+        email: teacherEmail,
+        password: teacherPassword
+      });
+
       setMessage(response.data.message);
       setTeacherEmail('');
       setTeacherPassword('');
@@ -52,16 +76,16 @@ const PrincipalDashboard = () => {
         startTime,
         endTime,
         days,
-        numStudents,       
-        maxCapacity       
+        numStudents,
+        maxCapacity
       });
       setMessage(response.data.message);
       setClassroomName('');
       setStartTime('');
       setEndTime('');
       setDays([]);
-      setNumStudents(''); 
-      setMaxCapacity(''); 
+      setNumStudents('');
+      setMaxCapacity('');
     } catch (error) {
       setError(error.response ? error.response.data.error : 'An error occurred');
     }
@@ -71,7 +95,7 @@ const PrincipalDashboard = () => {
     switch (selectedOption) {
       case 'create-student-account':
         return (
-          <div>
+          <div className="form-container">
             <Typography variant="h6">Create Student Account</Typography>
             <TextField
               label="Email"
@@ -98,7 +122,7 @@ const PrincipalDashboard = () => {
         );
       case 'create-teacher-account':
         return (
-          <div>
+          <div className="form-container">
             <Typography variant="h6">Create Teacher Account</Typography>
             <TextField
               label="Email"
@@ -125,7 +149,7 @@ const PrincipalDashboard = () => {
         );
       case 'create-classroom':
         return (
-          <div className="scrollable-form">
+          <div className="form-container scrollable-form">
             <Typography variant="h6">Create Classroom</Typography>
             <TextField
               label="Classroom Name"
@@ -195,11 +219,11 @@ const PrincipalDashboard = () => {
           </div>
         );
       case 'manage-accounts':
-        return <div>Manage Accounts Content</div>;
+        return <div className="form-container">Manage Accounts Content</div>;
       case 'assign-teachers':
-        return <div>Assign Teachers to Classrooms Form</div>;
+        return <div className="form-container">Assign Teachers to Classrooms Form</div>;
       case 'assign-students':
-        return <div>Assign Students to Teachers Form</div>;
+        return <div className="form-container">Assign Students to Teachers Form</div>;
       default:
         return <p>Select an option from the sidebar to get started.</p>;
     }
@@ -243,12 +267,15 @@ const PrincipalDashboard = () => {
           <ListItem button onClick={() => setSelectedOption('assign-students')}>
             <ListItemIcon>
               <FaUserFriends />
-                       </ListItemIcon>
+            </ListItemIcon>
             <ListItemText primary="Assign Students to Teachers" />
           </ListItem>
         </List>
       </aside>
-      <main className="main-content">
+      <main className="content">
+        <Typography variant="h4" gutterBottom>
+          Principal Dashboard
+        </Typography>
         {renderContent()}
       </main>
     </div>
@@ -256,4 +283,3 @@ const PrincipalDashboard = () => {
 };
 
 export default PrincipalDashboard;
-
