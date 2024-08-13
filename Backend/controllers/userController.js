@@ -1,53 +1,18 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const {users, UserModel} = require('../models/userModel'); 
-const Student = require('../models/studentModel');  
-const Teacher = require('../models/teacherModel');
-
-exports.createStudent = async (req, res) => {
-  const { email, password } = req.body;
-
-  try { 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const newStudent = new Student({
-      email,
-      password: hashedPassword,
-    });
-
-    await newStudent.save();
-    res.status(201).json({ message: 'Student account created successfully', student: newStudent });
-  } catch (err) {
-    res.status(500).json({ message: 'Error creating student', error: err.message });
-  }
-};  
-
-exports.createTeacher = async (req, res) => {
-  const { email, password } = req.body; 
-
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10); 
-
-    const newTeacher = new Teacher({
-      email,
-      password: hashedPassword,
-    }); 
-
-    await newTeacher.save();
-    res.status(201).json({ message: 'Teacher account created successfully', teacher: newTeacher }); 
-    } catch (err) {
-    res.status(500).json({ message: 'Error creating teacher', error: err.message });
-  }
-} 
-
 
 exports.createUser = async (req, res) => {
   const { email, password, role } = req.body;
 
   try {
+    if (!['student', 'teacher', 'principal'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
+    const newUser = new UserModel({
       email,
       password: hashedPassword,
       role,
