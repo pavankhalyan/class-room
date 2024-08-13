@@ -26,7 +26,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../Styles/PrincipalDashboard.css';
 
 const PrincipalDashboard = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState(''); 
+  const [studentId,setStudentId] = useState(''); 
+  const [teacherId, setTeacherId] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
   const [teacherEmail, setTeacherEmail] = useState('');
@@ -43,11 +45,13 @@ const PrincipalDashboard = () => {
       const response = await axios.post('http://localhost:5000/api/auth/Signup', {
         email: studentEmail,
         password: studentPassword,
-        role : 'student'
+        role : 'student', 
+        id:studentId
       });
       toast.success(response.data.message);
       setStudentEmail('');
-      setStudentPassword('');
+      setStudentPassword(''); 
+      setStudentId('');
     } catch (error) {
       toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
@@ -58,11 +62,13 @@ const PrincipalDashboard = () => {
       const response = await axios.post('http://localhost:5000/api/auth/Signup', {
         email: teacherEmail,
         password: teacherPassword,
-        role: 'teacher'
+        role: 'teacher',
+        id:teacherId
       });
       toast.success(response.data.message);
       setTeacherEmail('');
-      setTeacherPassword('');
+      setTeacherPassword(''); 
+      setTeacherId('');
     } catch (error) {
       toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
@@ -94,8 +100,17 @@ const PrincipalDashboard = () => {
     switch (selectedOption) {
       case 'create-student-account':
         return (
-          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-80">
-            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Student Account</Typography>
+          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-90">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Student Account</Typography> 
+            <TextField
+              label="ID"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)} // Handle ID change
+              className="mb-8"
+            />
             <TextField
               label="Email"
               type="email"
@@ -125,8 +140,17 @@ const PrincipalDashboard = () => {
         );
       case 'create-teacher-account':
         return (
-          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-80">
-            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Teacher Account</Typography>
+          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-90">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Teacher Account</Typography> 
+            <TextField
+              label="ID"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={teacherId}
+              onChange={(e) => setTeacherId(e.target.value)} // Handle ID change
+              className="mb-8"
+            />
             <TextField
               label="Email"
               type="email"
