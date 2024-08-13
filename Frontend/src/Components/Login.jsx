@@ -28,6 +28,12 @@ const Login = () => {
         case 'principal':
           navigate('/principal');
           break;
+        case 'teacher':
+          navigate('/teacher');
+          break;
+        case 'student':
+          navigate('/student');
+          break;
         default:
           toast.error('Invalid role selected.', {
             position: "bottom-center",
