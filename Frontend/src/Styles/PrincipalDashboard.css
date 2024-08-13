@@ -1,86 +1,85 @@
 .dashboard-container {
-  display: flex;
-  height: 100vh; /* Use full viewport height for better alignment */
-}
+    display: flex;
+    height: 100vh; 
+    width: 100vw;
+  }
+  
+  .sidebar {
+    width: 400px; 
+    background-color: #343a40;
+    padding: 20px;
+    color: #fff;
+    flex-shrink: 0;
+    height: 100vh; 
+  }
+  
+  .sidebar h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+  } 
 
-.sidebar {
-  width: 250px; /* Adjusted width for sidebar */
-  background-color: #343a40;
-  padding: 20px;
-  color: #fff;
-  flex-shrink: 0;
-  height: 100vh; /* Ensure the sidebar stretches the full height */
-}
+  .sidebar .MuiListItem-root {
+    color: #fff;
+  }
+  
+  .sidebar .MuiListItem-root:hover {
+    background-color: #495057;
+  }
+  
+  .sidebar .MuiListItem-root.active {
+    background-color: #007bff;
+  }
+  
+  .form-container { 
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100%; 
+  } 
 
-.sidebar h3 {
-  margin-bottom: 20px;
-  font-size: 20px;
-}
+  .content{
+    width: 100vw;
+  }
 
-.sidebar .MuiListItem-root {
-  color: #fff;
-}
-
-.sidebar .MuiListItem-root:hover {
-  background-color: #495057;
-}
-
-.main-content {
-  padding: 20px;
-  background-color: #f8f9fa;
-  flex-grow: 1;
-  display: flex;
-  justify-content: center; /* Centers content horizontally */
-  align-items: center; /* Centers content vertically */
-}
-
-.form-container {
-  width: 100%;
-  max-width: 600px; /* Limit form container width */
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.scrollable-form {
-  max-height: 400px; /* Adjust height as needed */
-  overflow-y: auto;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #fff;
-  margin-top: 20px; /* Add margin to separate from top */
-}
-
-.submit-button {
-  margin-top: 20px; /* Margin for spacing */
-  width: 100%; /* Full-width button */
-  padding: 10px; /* Increase padding for better look */
-  background-color: #007bff; /* Bootstrap primary color */
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.submit-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-.alert {
-  margin-top: 20px; /* Separate alert from the button */
-}
-
-.alert-success {
-  color: #28a745;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-.alert-error {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-}
+  .scrollable-form {
+    max-height: 400px; 
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    margin-top: 20px; 
+  }
+  
+  .submit-button {
+    margin-top: 30px;
+    width: 100%; 
+    padding: 10px;
+    background-color: #007bff; 
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center; 
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3; 
+  }
+  
+  .alert {
+    margin-top: 30px; 
+  }
+  
+  .alert-success {
+    color: #28a745;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .alert-error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }

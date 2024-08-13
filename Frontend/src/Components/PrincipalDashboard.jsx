@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Typography,
-  Alert,
   FormControl,
   FormGroup,
   FormControlLabel,
@@ -22,6 +21,8 @@ import {
   FaUserFriends
 } from 'react-icons/fa';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../Styles/PrincipalDashboard.css';
 
 const PrincipalDashboard = () => {
@@ -36,8 +37,6 @@ const PrincipalDashboard = () => {
   const [days, setDays] = useState([]);
   const [numStudents, setNumStudents] = useState('');
   const [maxCapacity, setMaxCapacity] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
 
   const handleStudentSubmit = async () => {
     try {
@@ -45,12 +44,11 @@ const PrincipalDashboard = () => {
         email: studentEmail,
         password: studentPassword
       });
-
-      setMessage(response.data.message);
+      toast.success(response.data.message);
       setStudentEmail('');
       setStudentPassword('');
     } catch (error) {
-      setError(error.response ? error.response.data.error : 'An error occurred');
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
   };
 
@@ -60,12 +58,11 @@ const PrincipalDashboard = () => {
         email: teacherEmail,
         password: teacherPassword
       });
-
-      setMessage(response.data.message);
+      toast.success(response.data.message);
       setTeacherEmail('');
       setTeacherPassword('');
     } catch (error) {
-      setError(error.response ? error.response.data.error : 'An error occurred');
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
   };
 
@@ -79,7 +76,7 @@ const PrincipalDashboard = () => {
         numStudents,
         maxCapacity
       });
-      setMessage(response.data.message);
+      toast.success(response.data.message);
       setClassroomName('');
       setStartTime('');
       setEndTime('');
@@ -87,7 +84,7 @@ const PrincipalDashboard = () => {
       setNumStudents('');
       setMaxCapacity('');
     } catch (error) {
-      setError(error.response ? error.response.data.error : 'An error occurred');
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
   };
 
@@ -95,8 +92,8 @@ const PrincipalDashboard = () => {
     switch (selectedOption) {
       case 'create-student-account':
         return (
-          <div className="form-container">
-            <Typography variant="h6">Create Student Account</Typography>
+          <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-80">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Student Account</Typography>
             <TextField
               label="Email"
               type="email"
@@ -104,6 +101,7 @@ const PrincipalDashboard = () => {
               margin="normal"
               value={studentEmail}
               onChange={(e) => setStudentEmail(e.target.value)}
+              className="mb-8"
             />
             <TextField
               label="Password"
@@ -112,12 +110,15 @@ const PrincipalDashboard = () => {
               margin="normal"
               value={studentPassword}
               onChange={(e) => setStudentPassword(e.target.value)}
+              className="mb-6"
             />
-            <Button variant="contained" color="primary" onClick={handleStudentSubmit}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleStudentSubmit}
+            >
               Create Account
             </Button>
-            {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
-            {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
           </div>
         );
       case 'create-teacher-account':
@@ -143,8 +144,6 @@ const PrincipalDashboard = () => {
             <Button variant="contained" color="primary" onClick={handleTeacherSubmit}>
               Create Account
             </Button>
-            {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
-            {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
           </div>
         );
       case 'create-classroom':
@@ -214,8 +213,6 @@ const PrincipalDashboard = () => {
             <Button variant="contained" color="primary" className="submit-button" onClick={handleClassroomSubmit}>
               Create Classroom
             </Button>
-            {message && <Alert severity="success" style={{ marginTop: 10 }}>{message}</Alert>}
-            {error && <Alert severity="error" style={{ marginTop: 10 }}>{error}</Alert>}
           </div>
         );
       case 'manage-accounts':
@@ -232,7 +229,7 @@ const PrincipalDashboard = () => {
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
-        <h3>Admin Options</h3>
+        <h3>Principal Dashboard</h3>
         <List>
           <ListItem button onClick={() => setSelectedOption('create-student-account')}>
             <ListItemIcon>
@@ -273,10 +270,8 @@ const PrincipalDashboard = () => {
         </List>
       </aside>
       <main className="content">
-        <Typography variant="h4" gutterBottom>
-          Principal Dashboard
-        </Typography>
         {renderContent()}
+        <ToastContainer position='top-center' className="pl-14" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>
       </main>
     </div>
   );
