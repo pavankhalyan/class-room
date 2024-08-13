@@ -40,9 +40,10 @@ const PrincipalDashboard = () => {
 
   const handleStudentSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/create-student', {
+      const response = await axios.post('http://localhost:5000/api/auth/Signup', {
         email: studentEmail,
-        password: studentPassword
+        password: studentPassword,
+        role : 'student'
       });
       toast.success(response.data.message);
       setStudentEmail('');
@@ -54,9 +55,10 @@ const PrincipalDashboard = () => {
 
   const handleTeacherSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/create-teacher', {
+      const response = await axios.post('http://localhost:5000/api/auth/Signup', {
         email: teacherEmail,
-        password: teacherPassword
+        password: teacherPassword,
+        role: 'teacher'
       });
       toast.success(response.data.message);
       setTeacherEmail('');
