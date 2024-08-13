@@ -5,7 +5,5 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.post('/create-classroom', createClassroom);
 
-// Assign students to a classroom
-router.post('/assign-students', authMiddleware, assignStudents);
 
 module.exports = router;

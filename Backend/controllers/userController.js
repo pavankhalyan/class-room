@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
-const users = require('../models/userModel').users; // Import the hardcoded users
+const {users, UserModel} = require('../models/userModel'); 
 const Student = require('../models/studentModel');  
 const Teacher = require('../models/teacherModel');
 
@@ -60,18 +60,17 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Principal login
+
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
+  const { email, password, role } = req.body; 
+  
   try {
-    const hardcodedUser = users.find(user => user.email === email && user.password === password);
-
+    const hardcodedUser = users.find(user => user.email === email && user.password === password && user.role === role);
     if (hardcodedUser) {
       return res.status(200).json({ role: hardcodedUser.role });
     }
-
-    const user = await User.findOne({ email });
+    
+    const user = await users.findone({ email });
 
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
@@ -81,6 +80,10 @@ exports.login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    } 
+
+    if(role !== user.role){
+      return res.status(400).json({message: `role mismatched. expected : ${user.role},received: ${role}`})
     }
     
     res.status(200).json({ role: user.role });

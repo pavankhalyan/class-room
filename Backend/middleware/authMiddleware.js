@@ -17,7 +17,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// Placeholder for future middleware (if needed)
 const checkAuth = (req, res, next) => {
   next();
 };
