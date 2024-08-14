@@ -30,6 +30,7 @@ const PrincipalDashboard = () => {
       try {
         const studentsResponse = await axios.get('http://localhost:5000/api/auth/students');
         const teachersResponse = await axios.get('http://localhost:5000/api/auth/teachers');
+        console.log(studentsResponse.data)
         setStudents(studentsResponse.data);
         setTeachers(teachersResponse.data);
       } catch (error) {
@@ -302,20 +303,26 @@ const PrincipalDashboard = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map((student) => (
+                    { students.length > 0 ? (
+                      students.map((student) => (
                     <TableRow key={student._id}>
-                      <TableCell>{student.email}</TableCell>
-                      <TableCell>
-                        <IconButton onClick={() => setEditingStudent(student)}>
-                          <FaEdit />
-                        </IconButton>
-                        <IconButton onClick={() => handleDeleteStudent(student._id)}>
-                          <FaTrash />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                           <TableCell>{student.email}</TableCell>
+                            <TableCell>
+                               <IconButton onClick={() => setEditingStudent(student)}>
+                            <FaEdit />
+                             </IconButton>
+                      <IconButton onClick={() => handleDeleteStudent(student._id)}>
+                           <FaTrash />
+                          </IconButton>
+                         </TableCell>
+                          </TableRow>
+                           ))
+                          ) : (
+                             <TableRow>
+                            <TableCell colSpan={2}>No students found</TableCell>
+                        </TableRow>
+                        )}
+                     </TableBody>
               </Table>
             </TableContainer>
             <Typography variant="h6" className="text-xl font-bold mt-6 mb-4">Teachers</Typography>
@@ -328,19 +335,25 @@ const PrincipalDashboard = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {teachers.map((teacher) => (
-                    <TableRow key={teacher._id}>
-                      <TableCell>{teacher.email}</TableCell>
-                      <TableCell>
-                        <IconButton onClick={() => setEditingTeacher(teacher)}>
-                          <FaEdit />
-                        </IconButton>
-                        <IconButton onClick={() => handleDeleteTeacher(teacher._id)}>
-                          <FaTrash />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                {teachers.length > 0 ? (
+                     teachers.map((teacher) => (
+                       <TableRow key={teacher._id}>
+                         <TableCell>{teacher.email}</TableCell>
+                         <TableCell>
+                          <IconButton onClick={() => setEditingTeacher(teacher)}>
+                           <FaEdit />
+                          </IconButton>
+                          <IconButton onClick={() => handleDeleteTeacher(teacher._id)}>
+                            <FaTrash />
+                           </IconButton>
+                       </TableCell>
+                             </TableRow>
+                               ))
+                            ) : (
+                              <TableRow>
+                           <TableCell colSpan={2}>No teachers found</TableCell>
+                          </TableRow>
+                           )}
                 </TableBody>
               </Table>
             </TableContainer>
