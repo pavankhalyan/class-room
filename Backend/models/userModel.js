@@ -4,7 +4,8 @@ const users = [
   { email: 'principal@classroom.com', password: 'Admin', role: 'principal' }
 ];
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({ 
+  id: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['principal', 'teacher', 'student'], required: true },
