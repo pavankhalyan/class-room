@@ -1,34 +1,13 @@
-import { useState } from 'react';
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  TextField,
-  Button,
-  Typography,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox
-} from '@mui/material';
-import {
-  FaUserGraduate,
-  FaChalkboardTeacher,
-  FaUsersCog,
-  FaChalkboard,
-  FaUserTie,
-  FaUserFriends
-} from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import {List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, FormControl, FormGroup, FormControlLabel, Checkbox, Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import { FaUserGraduate,FaChalkboardTeacher,FaUsersCog,FaChalkboard,FaUserTie,FaUserFriends,FaEdit,FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Styles/PrincipalDashboard.css';
 
 const PrincipalDashboard = () => {
-  const [selectedOption, setSelectedOption] = useState(''); 
-  const [studentId,setStudentId] = useState(''); 
-  const [teacherId, setTeacherId] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
   const [teacherEmail, setTeacherEmail] = useState('');
@@ -38,15 +17,36 @@ const PrincipalDashboard = () => {
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
   const [numStudents, setNumStudents] = useState('');
-  const [maxCapacity, setMaxCapacity] = useState('');
+  const [maxCapacity, setMaxCapacity] = useState(''); 
+  const [studentId, setStudentId] = useState('');
+  const [teacherId, setTeacherId] = useState('');
+  const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [editingTeacher, setEditingTeacher] = useState(null);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const studentsResponse = await axios.get('http://localhost:5000/api/auth/students');
+        const teachersResponse = await axios.get('http://localhost:5000/api/auth/teachers');
+        setStudents(studentsResponse.data);
+        setTeachers(teachersResponse.data);
+      } catch (error) {
+        toast.error('Failed to fetch accounts',error);
+      }
+    };
+
+    fetchAccounts();
+  }, []);   
 
   const handleStudentSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/Signup', {
+        id:studentId,
         email: studentEmail,
         password: studentPassword,
         role : 'student', 
-        id:studentId
       });
       toast.success(response.data.message);
       setStudentEmail('');
@@ -57,13 +57,14 @@ const PrincipalDashboard = () => {
     }
   };
 
+
   const handleTeacherSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/Signup', {
+        id:teacherId,
         email: teacherEmail,
         password: teacherPassword,
         role: 'teacher',
-        id:teacherId
       });
       toast.success(response.data.message);
       setTeacherEmail('');
@@ -96,6 +97,52 @@ const PrincipalDashboard = () => {
     }
   };
 
+  const handleUpdateStudent = async (studentId, updatedData) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/auth/students/${studentId}`, updatedData);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/students');
+      setStudents(data);
+      setEditingStudent(null);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
+  const handleDeleteStudent = async (studentId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/auth/students/${studentId}`);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/students');
+      setStudents(data);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
+  const handleUpdateTeacher = async (teacherId, updatedData) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/auth/teachers/${teacherId}`, updatedData);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
+      setTeachers(data);
+      setEditingTeacher(null);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
+  const handleDeleteTeacher = async (teacherId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/auth/teachers/${teacherId}`);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
+      setTeachers(data);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
+
   const renderContent = () => {
     switch (selectedOption) {
       case 'create-student-account':
@@ -107,10 +154,10 @@ const PrincipalDashboard = () => {
               type="text"
               fullWidth
               margin="normal"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)} // Handle ID change
+              value={studentId} 
+              onChange={(e) => setStudentId(e.target.value)}
               className="mb-8"
-            />
+           />
             <TextField
               label="Email"
               type="email"
@@ -147,10 +194,10 @@ const PrincipalDashboard = () => {
               type="text"
               fullWidth
               margin="normal"
-              value={teacherId}
-              onChange={(e) => setTeacherId(e.target.value)} // Handle ID change
+              value={teacherId} 
+              onChange={(e) => setTeacherId(e.target.value)}
               className="mb-8"
-            />
+           />
             <TextField
               label="Email"
               type="email"
@@ -242,7 +289,63 @@ const PrincipalDashboard = () => {
           </div>
         );
       case 'manage-accounts':
-        return <div className="form-container">Manage Accounts Content</div>;
+        return (
+          <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Manage Accounts</Typography>
+            <Typography variant="h6" className="text-xl font-bold mb-4">Students</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {students.map((student) => (
+                    <TableRow key={student._id}>
+                      <TableCell>{student.email}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => setEditingStudent(student)}>
+                          <FaEdit />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteStudent(student._id)}>
+                          <FaTrash />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography variant="h6" className="text-xl font-bold mt-6 mb-4">Teachers</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {teachers.map((teacher) => (
+                    <TableRow key={teacher._id}>
+                      <TableCell>{teacher.email}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => setEditingTeacher(teacher)}>
+                          <FaEdit />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteTeacher(teacher._id)}>
+                          <FaTrash />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        );
       case 'assign-teachers':
         return <div className="form-container">Assign Teachers to Classrooms Form</div>;
       case 'assign-students':
@@ -297,7 +400,7 @@ const PrincipalDashboard = () => {
       </aside>
       <main className="content">
         {renderContent()}
-        <ToastContainer position='top-center' className="pl-14" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>
+        <ToastContainer position='top-center' autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>
       </main>
     </div>
   );
