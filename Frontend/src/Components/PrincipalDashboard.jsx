@@ -22,24 +22,21 @@ const PrincipalDashboard = () => {
   const [teacherId, setTeacherId] = useState('');
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
-  const [editingStudent, setEditingStudent] = useState(null);
-  const [editingTeacher, setEditingTeacher] = useState(null);
+  const [setEditingStudent] = useState(null);
+  const [ setEditingTeacher] = useState(null);
 
   useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const studentsResponse = await axios.get('http://localhost:5000/api/auth/students');
-        const teachersResponse = await axios.get('http://localhost:5000/api/auth/teachers');
-        console.log(studentsResponse.data)
-        setStudents(studentsResponse.data);
-        setTeachers(teachersResponse.data);
-      } catch (error) {
-        toast.error('Failed to fetch accounts',error);
-      }
-    };
+    fetch('http://localhost:5000/api/auth/students')
+      .then(response => response.json())
+      .then(data => setStudents(data))  
+      .catch(error => console.error('Error fetching students:', error));
+    
+    fetch('http://localhost:5000/api/auth/teachers')
+      .then(response => response.json())
+      .then(data => setTeachers(data)) 
+      .catch(error => console.error('Error fetching teachers:', error));
+  }, []);  
 
-    fetchAccounts();
-  }, []);   
 
   const handleStudentSubmit = async () => {
     try {
@@ -98,17 +95,17 @@ const PrincipalDashboard = () => {
     }
   };
 
-  const handleUpdateStudent = async (studentId, updatedData) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/api/auth/students/${studentId}`, updatedData);
-      toast.success(response.data.message);
-      const { data } = await axios.get('http://localhost:5000/api/auth/students');
-      setStudents(data);
-      setEditingStudent(null);
-    } catch (error) {
-      toast.error(error.response ? error.response.data.error : 'An error occurred');
-    }
-  };
+  // const handleUpdateStudent = async (studentId, updatedData) => {
+  //   try {
+  //     const response = await axios.put(`http://localhost:5000/api/auth/students/${studentId}`, updatedData);
+  //     toast.success(response.data.message);
+  //     const { data } = await axios.get('http://localhost:5000/api/auth/students');
+  //     setStudents(data);
+  //     setEditingStudent(null);
+  //   } catch (error) {
+  //     toast.error(error.response ? error.response.data.error : 'An error occurred');
+  //   }
+  // };
 
   const handleDeleteStudent = async (studentId) => {
     try {
@@ -121,17 +118,17 @@ const PrincipalDashboard = () => {
     }
   };
 
-  const handleUpdateTeacher = async (teacherId, updatedData) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/api/auth/teachers/${teacherId}`, updatedData);
-      toast.success(response.data.message);
-      const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
-      setTeachers(data);
-      setEditingTeacher(null);
-    } catch (error) {
-      toast.error(error.response ? error.response.data.error : 'An error occurred');
-    }
-  };
+  // const handleUpdateTeacher = async (teacherId, updatedData) => {
+  //   try {
+  //     const response = await axios.put(`http://localhost:5000/api/auth/teachers/${teacherId}`, updatedData);
+  //     toast.success(response.data.message);
+  //     const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
+  //     setTeachers(data);
+  //     setEditingTeacher(null);
+  //   } catch (error) {
+  //     toast.error(error.response ? error.response.data.error : 'An error occurred');
+  //   }
+  // };
 
   const handleDeleteTeacher = async (teacherId) => {
     try {

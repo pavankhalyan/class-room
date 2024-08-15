@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import Table from './Table';
 
 function TeacherList() {
-  const [teachers, setTeachers] = useState([]);
+  const [teachers] = useState([]);
 
   useEffect(() => {
     // Fetch teacher data from backend

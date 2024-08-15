@@ -11,8 +11,8 @@ import StudentDetail from './Components/StudentDetail';
 import StudentList from './Components/StudentList';
 import TeacherDetail from './Components/TeacherDetail';
 import TeacherList from './Components/TeacherList';
-import Header from './Components/Header';
-import Sidebar from './Components/Sidebar'; 
+// import Header from './Components/Header';
+// import Sidebar from './Components/Sidebar'; 
 
 
 function App() {
