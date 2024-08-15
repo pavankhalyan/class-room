@@ -61,23 +61,23 @@ exports.login = async (req, res) => {
 
 exports.getStudents = async (req, res) => {
   try {
-    const student = await UserModel.findOne({ role: 'student' });
-    res.status(200).json({ student });
+    const students = await UserModel.find({ role: 'student' });
+    res.status(200).json(students);
   } catch (err) {
-    console.error('Error fetching student:', err);
-    res.status(500).json({ message: 'Error fetching student', error: err.message });
+    console.error('Error fetching students:', err);
+    res.status(500).json({ message: 'Error fetching students', error: err.message });
   }
-} 
+}
 
 exports.getTeachers = async (req, res) => {
   try {
-    const teacher = await UserModel.findOne({ role: 'teacher' });
-    res.status(200).json({ teacher });
+    const teachers = await UserModel.find({ role: 'teacher' });
+    res.status(200).json(teachers); 
   } catch (err) {
-    console.error('Error fetching teacher:', err);
-    res.status(500).json({ message: 'Error fetching teacher', error: err.message });
+    console.error('Error fetching teachers:', err);
+    res.status(500).json({ message: 'Error fetching teachers', error: err.message });
   }
-} 
+}
 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
