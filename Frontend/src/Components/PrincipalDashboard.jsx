@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {List, ListItem, ListItemIcon, ListItemText, TextField, Button, Typography, FormControl, FormGroup, FormControlLabel, Checkbox, Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import {List, ListItem, ListItemIcon, ListItemText,Dialog,DialogActions,dialogClasses,DialogTitle, TextField, Button, Typography, FormControl, FormGroup, FormControlLabel, Checkbox, Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import { FaUserGraduate,FaChalkboardTeacher,FaUsersCog,FaChalkboard,FaUserTie,FaUserFriends,FaEdit,FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,7 +12,8 @@ const PrincipalDashboard = () => {
   const [studentPassword, setStudentPassword] = useState('');
   const [teacherEmail, setTeacherEmail] = useState('');
   const [teacherPassword, setTeacherPassword] = useState('');
-  const [classroomName, setClassroomName] = useState('');
+  const [classroomName, setClassroomName] = useState(''); 
+  const [classrooms, setClassrooms] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
@@ -21,6 +22,10 @@ const PrincipalDashboard = () => {
   const [studentId, setStudentId] = useState('');
   const [teacherId, setTeacherId] = useState('');
   const [students, setStudents] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [updatedEmail, setUpdatedEmail] = useState('');
+  const [updatedPassword, setUpdatedPassword] = useState('');
   const [teachers, setTeachers] = useState([]);
   const [setEditingStudent] = useState(null);
   const [ setEditingTeacher] = useState(null);
@@ -36,6 +41,55 @@ const PrincipalDashboard = () => {
       .then(data => setTeachers(data)) 
       .catch(error => console.error('Error fetching teachers:', error));
   }, []);  
+
+
+  const fetchUsers = async () => {
+     const studentsResponse = await fetch.get('http://localhost:5000/api/auth/students'); 
+     const teacherResponse  = await fetch.get('http://localhost:5000/api/auth/teachers');
+     setStudents(studentsResponse);
+     setTeachers(teacherResponse);
+  }  
+
+  useEffect( () => {
+    fetchClassrooms();
+  }, []) 
+
+
+  const fetchClassrooms = async () => {
+    try{ 
+      const response = await axios.get(''); 
+      setClassrooms(response.data);
+    }catch(err){ 
+      console.error('error in fetching classrooms', err)
+    }
+  }
+
+  const handleOpenDialog = (user) => {
+    setCurrentUser(user);
+    setUpdatedEmail(user.email);
+    setOpenDialog(true);
+  } 
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setCurrentUser(null);
+    setUpdatedEmail(''); 
+    setUpdatedPassword('');
+  }
+
+  const handleUpdateUser = async () => {
+    try {
+      const updatedData = { email: updatedEmail, password: updatedPassword || undefined };
+
+      const response = await axios.put(`http://localhost:5000/api/auth/users/${currentUser._id}`, updatedData);
+
+      toast.success(response.data.message);
+      fetchUsers(); 
+      handleCloseDialog(); 
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
 
 
   const handleStudentSubmit = async () => {
@@ -89,23 +143,45 @@ const PrincipalDashboard = () => {
       setEndTime('');
       setDays([]);
       setNumStudents('');
-      setMaxCapacity('');
+      setMaxCapacity(''); 
+
+      fetchClassrooms();
     } catch (error) {
       toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
   };
 
-  // const handleUpdateStudent = async (studentId, updatedData) => {
-  //   try {
-  //     const response = await axios.put(`http://localhost:5000/api/auth/students/${studentId}`, updatedData);
-  //     toast.success(response.data.message);
-  //     const { data } = await axios.get('http://localhost:5000/api/auth/students');
-  //     setStudents(data);
-  //     setEditingStudent(null);
-  //   } catch (error) {
-  //     toast.error(error.response ? error.response.data.error : 'An error occurred');
-  //   }
-  // };
+  const renderHomeScreen = () => (
+    <div className="classroom-list">
+      <Typography variant="h6" className="text-2xl font-bold mb-4">Classrooms</Typography>
+      {classrooms.length === 0 ? (
+        <Typography variant="body1">No classrooms available</Typography>
+      ) : (
+        <List>
+          {classrooms.map((classroom) => (
+            <ListItem key={classroom._id}>
+              <ListItemIcon>
+                <FaChalkboard />
+              </ListItemIcon>
+              <ListItemText primary={classroom.name} secondary={`Students: ${classroom.numStudents}, Capacity: ${classroom.maxCapacity}`} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
+  );
+
+  const handleUpdateStudent = async (student) => {
+    try { 
+      const studentId = student._id;
+      const response = await axios.put(`http://localhost:5000/api/auth/students/${studentId}`, updatedData);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/students');
+      setStudents(data);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
 
   const handleDeleteStudent = async (studentId) => {
     try {
@@ -118,17 +194,17 @@ const PrincipalDashboard = () => {
     }
   };
 
-  // const handleUpdateTeacher = async (teacherId, updatedData) => {
-  //   try {
-  //     const response = await axios.put(`http://localhost:5000/api/auth/teachers/${teacherId}`, updatedData);
-  //     toast.success(response.data.message);
-  //     const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
-  //     setTeachers(data);
-  //     setEditingTeacher(null);
-  //   } catch (error) {
-  //     toast.error(error.response ? error.response.data.error : 'An error occurred');
-  //   }
-  // };
+  const handleUpdateTeacher = async (teacher) => {
+    try { 
+      const teacherId = teacher._id;
+      const response = await axios.put(`http://localhost:5000/api/auth/teachers/${teacherId}`, updatedData);
+      toast.success(response.data.message);
+      const { data } = await axios.get('http://localhost:5000/api/auth/teachers');
+      setTeachers(data);
+    } catch (error) {
+      toast.error(error.response ? error.response.data.error : 'An error occurred');
+    }
+  };
 
   const handleDeleteTeacher = async (teacherId) => {
     try {
@@ -139,7 +215,8 @@ const PrincipalDashboard = () => {
     } catch (error) {
       toast.error(error.response ? error.response.data.error : 'An error occurred');
     }
-  };
+  }; 
+  
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -288,80 +365,92 @@ const PrincipalDashboard = () => {
         );
       case 'manage-accounts':
         return (
-          <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
-            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Manage Accounts</Typography>
-            <Typography variant="h6" className="text-xl font-bold mb-4">Students</Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                    { students.length > 0 ? (
-                      students.map((student) => (
-                    <TableRow key={student._id}>
-                           <TableCell>{student.email}</TableCell>
-                            <TableCell>
-                               <IconButton onClick={() => setEditingStudent(student)}>
-                            <FaEdit />
-                             </IconButton>
+          <div className=" mx-auto p-6 bg-white rounded-lg shadow-md ">
+          <Typography variant="h6" className="text-xl font-bold mb-4">Students</Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {students.map((student) => (
+                  <TableRow key={student._id}>
+                    <TableCell>{student.email}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpenDialog(student)}>
+                        <FaEdit />
+                      </IconButton>
                       <IconButton onClick={() => handleDeleteStudent(student._id)}>
-                           <FaTrash />
-                          </IconButton>
-                         </TableCell>
-                          </TableRow>
-                           ))
-                          ) : (
-                             <TableRow>
-                            <TableCell colSpan={2}>No students found</TableCell>
-                        </TableRow>
-                        )}
-                     </TableBody>
-              </Table>
-            </TableContainer>
-            <Typography variant="h6" className="text-xl font-bold mt-6 mb-4">Teachers</Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Actions</TableCell>
+                        <FaTrash />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                {teachers.length > 0 ? (
-                     teachers.map((teacher) => (
-                       <TableRow key={teacher._id}>
-                         <TableCell>{teacher.email}</TableCell>
-                         <TableCell>
-                          <IconButton onClick={() => setEditingTeacher(teacher)}>
-                           <FaEdit />
-                          </IconButton>
-                          <IconButton onClick={() => handleDeleteTeacher(teacher._id)}>
-                            <FaTrash />
-                           </IconButton>
-                       </TableCell>
-                             </TableRow>
-                               ))
-                            ) : (
-                              <TableRow>
-                           <TableCell colSpan={2}>No teachers found</TableCell>
-                          </TableRow>
-                           )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-        );
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <Typography variant="h6" className="text-xl font-bold mt-6 mb-4">Teachers</Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {teachers.map((teacher) => (
+                  <TableRow key={teacher._id}>
+                    <TableCell>{teacher.email}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpenDialog(teacher)}>
+                        <FaEdit />
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteTeacher(teacher._id)}>
+                        <FaTrash />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Edit User</DialogTitle>
+            <div style={{ padding: '16px' }}>
+              <TextField
+                label="Email"
+                fullWidth
+                margin="normal"
+                value={updatedEmail}
+                onChange={(e) => setUpdatedEmail(e.target.value)}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                fullWidth
+                margin="normal"
+                value={updatedPassword}
+                onChange={(e) => setUpdatedPassword(e.target.value)}
+              />
+            </div>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="secondary">Cancel</Button>
+              <Button onClick={handleUpdateUser} color="primary">Save Changes</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
       case 'assign-teachers':
         return <div className="form-container">Assign Teachers to Classrooms Form</div>;
       case 'assign-students':
         return <div className="form-container">Assign Students to Teachers Form</div>;
       default:
-        return <p>Select an option from the sidebar to get started.</p>;
+        return renderHomeScreen();
     }
   };
 
