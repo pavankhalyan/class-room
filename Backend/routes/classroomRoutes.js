@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { createClassroom, assignStudents } = require('../controllers/classroomController');
-const { authMiddleware } = require('../middleware/authMiddleware');
+const { createClassroom,getClassrooms } = require('../controllers/classroomController');
+
 
 router.post('/create-classroom', createClassroom);
 
+router.get('/get-classrooms', getClassrooms )
 
 module.exports = router;

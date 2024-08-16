@@ -84,11 +84,14 @@ exports.updateUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;
-    const updateData = { email };
+    const updateData = {}; 
+
+    if (email) {
+      updateData.email = email;
+    }
     
-    if (hashedPassword) {
-      updateData.password = hashedPassword;
+    if (Password) {
+      updateData.password = await bcrypt.hash(password, 12);
     }
 
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });

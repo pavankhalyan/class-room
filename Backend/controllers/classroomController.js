@@ -20,6 +20,15 @@ exports.createClassroom = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Error creating classroom', error: err.message });
   }
+}; 
+
+exports.getClassrooms = async (req, res) => {
+  try {
+    const classrooms = await Classroom.find();
+    res.status(200).json(classrooms);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching classrooms', error: err.message });
+  }
 };
 
 
