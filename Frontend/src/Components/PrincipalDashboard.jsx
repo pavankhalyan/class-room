@@ -13,7 +13,7 @@ const PrincipalDashboard = () => {
   const [teacherEmail, setTeacherEmail] = useState('');
   const [teacherPassword, setTeacherPassword] = useState('');
   const [classroomName, setClassroomName] = useState(''); 
-  const [classrooms, setClassrooms] = useState('');
+  const [classrooms, setClassrooms] = useState([]);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [days, setDays] = useState([]);
@@ -57,7 +57,7 @@ const PrincipalDashboard = () => {
 
   const fetchClassrooms = async () => {
     try{ 
-      const response = await axios.get(''); 
+      const response = await axios.get('http://localhost:5000/api/classroom/get-classrooms'); 
       setClassrooms(response.data);
     }catch(err){ 
       console.error('error in fetching classrooms', err)
@@ -457,7 +457,7 @@ const PrincipalDashboard = () => {
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
-        <h3>Principal Dashboard</h3>
+        <h3 onClick={renderHomeScreen} className='cursor-pointer'>Principal Dashboard</h3>
         <List>
           <ListItem button onClick={() => setSelectedOption('create-student-account')}>
             <ListItemIcon>
