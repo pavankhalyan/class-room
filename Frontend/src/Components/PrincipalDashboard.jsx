@@ -263,7 +263,7 @@ const PrincipalDashboard = () => {
       case 'create-teacher-account':
         return (
           <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-60 h-90">
-            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Teacher Account</Typography> 
+            <Typography variant="h6" className="text-2xl font-bold mb-6 text-center">Create Teacher Account</Typography>
             <TextField
               label="ID"
               type="text"
