@@ -10,7 +10,7 @@ import ClassroomTimeTable from './Components/ClassroomTimeTable';
 import StudentDetail from './Components/StudentDetail';
 import StudentList from './Components/StudentList';
 import TeacherDetail from './Components/TeacherDetail';
-import TeacherList from './Components/TeacherList';
+
 // import Header from './Components/Header';
 // import Sidebar from './Components/Sidebar'; 
 
@@ -32,7 +32,6 @@ function App() {
           <Route path="/student-detail" element={<StudentDetail />} />
           <Route path="/student-list" element={<StudentList />} />
           <Route path="/teacher-detail" element={<TeacherDetail />} />
-          <Route path="/teacher-list" element={<TeacherList />} />
         </Routes>
       </div>
     </Router>
