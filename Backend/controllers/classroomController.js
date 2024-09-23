@@ -31,8 +31,6 @@ exports.getClassrooms = async (req, res) => {
   }
 };
 
-
-// Assign students to a classroom
 exports.assignStudents = async (req, res) => {
   const { classroomId, studentIds } = req.body;
 

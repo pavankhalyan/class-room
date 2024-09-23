@@ -24,7 +24,8 @@ const ClassroomSchema = new mongoose.Schema({
   maxCapacity: {
     type: Number,
     required: true,
-  }
+  },
+  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
 });
 
 const Classroom = mongoose.model('Classroom', ClassroomSchema);
